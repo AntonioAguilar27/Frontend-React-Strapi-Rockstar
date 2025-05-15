@@ -20,6 +20,12 @@ export default function Navbar() {
           >
             Blogs
           </Link>
+          <Link
+            to="/videojuegos"
+            className="hover:text-gray-400 transition-colors duration-200"
+          >
+            Videojuegos
+          </Link>
         </div>
       </div>
     </nav>
