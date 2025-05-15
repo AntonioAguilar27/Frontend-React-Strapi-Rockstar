@@ -30,6 +30,10 @@ export default function Videojuegos() {
   const [plataformas, setPlataformas] = useState<Plataforma[]>([]);
   const [filtroPlataforma, setFiltroPlataforma] = useState<number | null>(null);
 
+  // Estado para modal
+  const [videojuegoSeleccionado, setVideojuegoSeleccionado] = useState<Videojuego | null>(null);
+  const [modalAbierto, setModalAbierto] = useState(false);
+
   useEffect(() => {
     axios.get(`${API_URL}/plataformas`).then(res => {
       const data = res.data.data;
@@ -65,20 +69,26 @@ export default function Videojuegos() {
       );
   }, [filtroPlataforma]);
 
+  // Funciones para abrir/cerrar modal
+  const abrirModal = (game: Videojuego) => {
+    setVideojuegoSeleccionado(game);
+    setModalAbierto(true);
+  };
+
+  const cerrarModal = () => {
+    setModalAbierto(false);
+    setVideojuegoSeleccionado(null);
+  };
+
   return (
     <div
-    className="min-h-screen py-10 px-4 bg-cover bg-center"
-    style={{
-      backgroundImage:
-        'url("http://localhost:1337/uploads/background_image_325d67b3eb.png")',
-    }}
-  >
-    <div className="max-w-7xl mx-auto">
-      <div className="p-6">
-        {/* Select de plataformas */}
+      className="min-h-screen bg-fixed bg-center bg-cover backdrop-blur-sm py-10 px-4"
+      style={{ backgroundImage: "url('http://localhost:1337/uploads/background_image_325d67b3eb.png')" }}
+    >
+      <div className="max-w-7xl mx-auto">
         <div className="mb-6">
           <select
-            className="w-full md:w-64 border border-gray-300 bg-white p-3 rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full md:w-64 border border-gray-300 bg-white bg-opacity-80 p-3 rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-400"
             onChange={(e) =>
               setFiltroPlataforma(e.target.value ? Number(e.target.value) : null)
             }
@@ -93,18 +103,17 @@ export default function Videojuegos() {
           </select>
         </div>
 
-        {/* Grid de videojuegos */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {videojuegos.map((game) => (
             <div
               key={game.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition"
+              className="bg-white/50 backdrop-blur shadow-lg rounded-xl overflow-hidden transition transform hover:-translate-y-1 hover:shadow-2xl"
             >
               {game.cover?.url ? (
                 <img
                   src={`http://localhost:1337${game.cover.url}`}
                   alt={game.nombre}
-                  className="w-full h-48 object-cover"
+                  className="w-full h-48 object-contain pt-2"
                 />
               ) : (
                 <div className="w-full h-48 bg-gray-300 flex items-center justify-center">
@@ -112,16 +121,19 @@ export default function Videojuegos() {
                 </div>
               )}
 
-              <div className="p-4 flex flex-col gap-2">
-                <h3 className="text-xl font-semibold">{game.nombre}</h3>
-                <p className="text-sm text-gray-600">
+              <div className="p-5 flex flex-col gap-2">
+                <h3 className="text-xl font-bold text-gray-800">{game.nombre}</h3>
+                <p className="text-sm text-gray-500">
                   Precio: ${game.precio.toFixed(2)} USD • Peso: {game.peso_gb} GB
                 </p>
-                <p className="text-sm text-gray-600">Fecha salida: {game.fecha_salida}</p>
-                <div className="text-sm text-gray-700">
+                <p className="text-sm text-gray-500">Fecha salida: {game.fecha_salida}</p>
+                <p className="text-sm text-gray-600">
                   Plataformas: {game.plataformas.map(p => p.nombre).join(', ')}
-                </div>
-                <button className="mt-3 self-start px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                </p>
+                <button
+                  onClick={() => abrirModal(game)}
+                  className="mt-3 self-start px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                >
                   Ver detalle
                 </button>
               </div>
@@ -129,7 +141,51 @@ export default function Videojuegos() {
           ))}
         </div>
       </div>
+
+      {/* Modal */}
+      {modalAbierto && videojuegoSeleccionado && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={cerrarModal} // cerrar al hacer click fuera del modal
+        >
+          <div
+            className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative max-h-[90vh] overflow-y-auto"
+            onClick={e => e.stopPropagation()} // evitar cierre al click dentro del modal
+          >
+            <button
+              className="absolute top-3 right-3 text-gray-700 hover:text-gray-900 text-2xl font-bold"
+              onClick={cerrarModal}
+              aria-label="Cerrar modal"
+            >
+              ✖
+            </button>
+
+            <h2 className="text-2xl font-bold mb-4">{videojuegoSeleccionado.nombre}</h2>
+
+            {videojuegoSeleccionado.cover?.url && (
+              <img
+                src={`http://localhost:1337${videojuegoSeleccionado.cover.url}`}
+                alt={videojuegoSeleccionado.nombre}
+                className="w-full h-64 object-contain mb-4"
+              />
+            )}
+
+            <p className="mb-2"><strong>Precio:</strong> ${videojuegoSeleccionado.precio.toFixed(2)} USD</p>
+            <p className="mb-2"><strong>Peso:</strong> {videojuegoSeleccionado.peso_gb} GB</p>
+            <p className="mb-2"><strong>Fecha de salida:</strong> {videojuegoSeleccionado.fecha_salida}</p>
+            <p className="mb-2"><strong>Plataformas:</strong> {videojuegoSeleccionado.plataformas.map(p => p.nombre).join(', ')}</p>
+
+            <div className="mt-4">
+              <h3 className="font-semibold mb-2">Sinopsis:</h3>
+              {videojuegoSeleccionado.sinopsis.map((block, i) => (
+                <p key={i} className="text-gray-700">
+                  {block.children.map((child, j) => child.text).join(' ')}
+                </p>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-  </div>
   );
 }
