@@ -3,11 +3,12 @@ import Landing from '../src/pages/Landing';
 import Blog from '../src/pages/Blog';
 import Navbar from '../src/components/Navbar';
 import Footer from '../src/components/Footer';
+import Banner from './components/Banner';
 
 function App() {
   return (
     <Router>
-      <Navbar />
+      <Navbar/>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/blogs" element={<Blog />} />

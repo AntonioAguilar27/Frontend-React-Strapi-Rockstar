@@ -2,12 +2,24 @@ import { Link } from 'react-router-dom';
 
 export default function Navbar() {
   return (
-    <nav className="bg-blue-800 text-white p-4 shadow-md">
-      <div className="container mx-auto flex justify-between items-center">
-        <span className="font-bold text-xl">Mi Sitio</span>
-        <div className="space-x-4">
-          <Link to="/" className="hover:underline">Inicio</Link>
-          <Link to="/blogs" className="hover:underline">Blogs</Link>
+    <nav className="bg-black text-white shadow-md">
+      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        <Link to="/" className="text-3xl font-extrabold tracking-wide hover:text-gray-300 transition-colors">
+          GTA VI
+        </Link>
+        <div className="flex space-x-6 text-xl font-semibold">
+          <Link
+            to="/"
+            className="hover:text-gray-400 transition-colors duration-200"
+          >
+            Inicio
+          </Link>
+          <Link
+            to="/blogs"
+            className="hover:text-gray-400 transition-colors duration-200"
+          >
+            Blogs
+          </Link>
         </div>
       </div>
     </nav>
