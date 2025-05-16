@@ -1,27 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import qs from 'qs';
+import type { Plataforma, Videojuego } from '../types';
 
-type Plataforma = {
-  id: number;
-  nombre: string;
-  slug: string;
-  fecha_lanzamiento: string;
-};
-
-type Videojuego = {
-  id: number;
-  nombre: string;
-  slug: string;
-  precio: number;
-  peso_gb: number;
-  fecha_salida: string;
-  sinopsis: { type: string; children: { type: string; text: string }[] }[];
-  cover: {
-    url: string;
-  } | null;
-  plataformas: Plataforma[];
-};
 
 const API_URL = 'http://localhost:1337/api';
 
@@ -88,7 +69,7 @@ export default function Videojuegos() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
           <select
-            className="w-full md:w-64 border border-gray-300 bg-white bg-opacity-80 p-3 rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full md:w-64 border border-black text-white bg-black bg-opacity-20 p-3  backdrop-blur rounded shadow focus:outline-none focus:ring-2 focus:ring-[#673e5f]"
             onChange={(e) =>
               setFiltroPlataforma(e.target.value ? Number(e.target.value) : null)
             }
@@ -107,32 +88,32 @@ export default function Videojuegos() {
           {videojuegos.map((game) => (
             <div
               key={game.id}
-              className="bg-white/50 backdrop-blur shadow-lg rounded-xl overflow-hidden transition transform hover:-translate-y-1 hover:shadow-2xl"
+              className="bg-black/30 backdrop-blur shadow-lg rounded-xl overflow-hidden transition transform hover:-translate-y-1 hover:shadow-2xl"
             >
               {game.cover?.url ? (
                 <img
                   src={`http://localhost:1337${game.cover.url}`}
                   alt={game.nombre}
-                  className="w-full h-48 object-contain pt-2"
+                  className="w-full h-48 object-contain mt-4"
                 />
               ) : (
-                <div className="w-full h-48 bg-gray-300 flex items-center justify-center">
+                <div className="w-full h-48 bg-gray-100 flex items-center justify-center">
                   Sin imagen
                 </div>
               )}
 
               <div className="p-5 flex flex-col gap-2">
-                <h3 className="text-xl font-bold text-gray-800">{game.nombre}</h3>
-                <p className="text-sm text-gray-500">
+                <h3 className="text-xl font-bold text-gray-100">{game.nombre}</h3>
+                <p className="text-sm text-gray-100">
                   Precio: ${game.precio.toFixed(2)} USD • Peso: {game.peso_gb} GB
                 </p>
-                <p className="text-sm text-gray-500">Fecha salida: {game.fecha_salida}</p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-100">Fecha salida: {game.fecha_salida}</p>
+                <p className="text-sm text-gray-100">
                   Plataformas: {game.plataformas.map(p => p.nombre).join(', ')}
                 </p>
                 <button
                   onClick={() => abrirModal(game)}
-                  className="mt-3 self-start px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                  className="mt-3 self-end px-4 py-2 bg-[#673E5F] text-white font-bold rounded hover:bg-[#844a7d] transition"
                 >
                   Ver detalle
                 </button>

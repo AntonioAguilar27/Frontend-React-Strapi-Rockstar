@@ -20,3 +20,26 @@ export interface Blog {
   imagen: Imagen; // ✅ ya no es array
   categoria: Categoria;
 }
+
+
+// types.ts
+export type Plataforma = {
+  id: number;
+  nombre: string;
+  slug: string;
+  fecha_lanzamiento: string;
+};
+
+export type Videojuego = {
+  id: number;
+  nombre: string;
+  slug: string;
+  precio: number;
+  peso_gb: number;
+  fecha_salida: string;
+  sinopsis: { type: string; children: { type: string; text: string }[] }[];
+  cover: {
+    url: string;
+  } | null;
+  plataformas: Plataforma[];
+};
