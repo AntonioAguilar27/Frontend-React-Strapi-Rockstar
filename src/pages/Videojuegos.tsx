@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import type { Plataforma, Videojuego } from '../types';
+import {Link} from 'react-router-dom';
 
 
 const API_URL = 'http://localhost:1337/api';
@@ -111,12 +112,11 @@ export default function Videojuegos() {
                 <p className="text-sm text-gray-100">
                   Plataformas: {game.plataformas.map(p => p.nombre).join(', ')}
                 </p>
-                <button
-                  onClick={() => abrirModal(game)}
-                  className="mt-3 self-end px-4 py-2 bg-[#673E5F] text-white font-bold rounded hover:bg-[#844a7d] transition"
-                >
-                  Ver detalle
-                </button>
+                <Link to={`/videojuego/${game.slug}`}>
+                  <button className="mt-3 self-end px-4 py-2 bg-[#673E5F] text-white font-bold rounded hover:bg-[#844a7d] transition">
+                    Ver detalle
+                  </button>
+                </Link>
               </div>
             </div>
           ))}

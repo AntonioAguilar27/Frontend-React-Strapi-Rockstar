@@ -18,7 +18,7 @@ export default function Navbar() {
             to="/blogs"
             className="hover:text-gray-400 transition-colors duration-200"
           >
-            Blogs
+            Galeria de imagenes
           </Link>
           <Link
             to="/videojuegos"

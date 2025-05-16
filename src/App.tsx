@@ -5,6 +5,7 @@ import Navbar from '../src/components/Navbar';
 import Footer from '../src/components/Footer';
 import Banner from './components/Banner';
 import Videojuegos from './pages/Videojuegos';
+import DetalleVideojuego from './pages/DetalleVideojuego';
 
 
 function App() {
@@ -15,7 +16,7 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/blogs" element={<Blog />} />
         <Route path="/videojuegos" element={<Videojuegos />} />
-
+        <Route path="/videojuego/:slug" element={<DetalleVideojuego />} />
       </Routes>
       <Footer />
     </Router>
