@@ -10,9 +10,7 @@ const fetchVideojuegoPorSlug = async (slug: string): Promise<Videojuego | null> 
     const res = await axios.get(`${API_URL}/api/videojuegos`, {
       params: {
         populate: '*',
-        filters: {
-          slug: slug,
-        },
+        filters: { slug: slug },
       },
     });
 
@@ -76,41 +74,58 @@ const DetalleVideojuego: React.FC = () => {
       });
   }, [slug]);
 
-  if (loading) return <div>Cargando...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="text-center py-10 text-white">Cargando...</div>;
+  if (error) return <div className="text-center py-10 text-red-500">Error: {error}</div>;
   if (!videojuego) return null;
 
   return (
-    <div>
-      <h1>{videojuego.nombre}</h1>
-      {videojuego.cover && (
-        <img
-          src={videojuego.cover.url}
-          alt={videojuego.nombre}
-          style={{ maxWidth: '300px' }}
-        />
-      )}
-      <p>Precio: ${videojuego.precio}</p>
-      <p>Peso: {videojuego.peso_gb} GB</p>
-      <p>Fecha de salida: {new Date(videojuego.fecha_salida).toLocaleDateString()}</p>
+    <div
+      className="min-h-screen bg-cover bg-center bg-fixed py-10 px-4"
+      style={{ backgroundImage: "url('http://localhost:1337/uploads/background_image_325d67b3eb.png')" }}
+    >
+      <div className="max-w-4xl mx-auto bg-black bg-opacity-30 text-white shadow-2xl rounded-xl overflow-hidden p-6 backdrop-blur">
+        <h1 className="text-3xl font-bold mb-6">{videojuego.nombre}</h1>
 
-      <h2>Sinopsis</h2>
-      {videojuego.sinopsis.map((block, i) => (
-        <p key={i}>
-          {block.children.map((child, j) => (
-            <span key={j}>{child.text}</span>
-          ))}
-        </p>
-      ))}
+        {videojuego.cover && (
+          <div className="mb-6 flex justify-center">
+            <img
+              src={videojuego.cover.url}
+              alt={videojuego.nombre}
+              className="rounded-lg shadow-lg max-h-96 object-contain"
+            />
+          </div>
+        )}
 
-      <h2>Plataformas</h2>
-      <ul>
-        {videojuego.plataformas.map((plataforma) => (
-          <li key={plataforma.id}>
-            {plataforma.nombre} (Lanzamiento: {new Date(plataforma.fecha_lanzamiento).toLocaleDateString()})
-          </li>
-        ))}
-      </ul>
+        <div className="space-y-2 mb-6">
+          <p><span className="font-semibold">💵 Precio:</span> ${videojuego.precio}</p>
+          <p><span className="font-semibold">💾 Peso:</span> {videojuego.peso_gb} GB</p>
+          <p><span className="font-semibold">📅 Fecha de salida:</span> {new Date(videojuego.fecha_salida).toLocaleDateString()}</p>
+        </div>
+
+        <div className="mb-6">
+          <h2 className="text-2xl font-semibold mb-2">🎮 Sinopsis</h2>
+          <div className="space-y-2">
+            {videojuego.sinopsis.map((block, i) => (
+              <p key={i}>
+                {block.children.map((child, j) => (
+                  <span key={j}>{child.text}</span>
+                ))}
+              </p>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-semibold mb-2">🕹️ Plataformas</h2>
+          <ul className="list-disc list-inside space-y-1">
+            {videojuego.plataformas.map((plataforma) => (
+              <li key={plataforma.id}>
+                {plataforma.nombre} — Lanzamiento: {new Date(plataforma.fecha_lanzamiento).toLocaleDateString()}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 };

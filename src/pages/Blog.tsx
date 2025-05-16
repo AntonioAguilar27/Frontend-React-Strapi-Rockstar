@@ -8,6 +8,7 @@ export default function Blog() {
   const [blogs, setBlogs] = useState<BlogType[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [filtro, setFiltro] = useState<number | null>(null);
+  const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(null);
 
   useEffect(() => {
     axios.get(`${API_URL}/categorias`).then(res => {
@@ -45,12 +46,16 @@ export default function Blog() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogs.map(blog => (
-            <div key={blog.id} className="bg-white/50 bg-opacity-90 backdrop-blur shadow-lg rounded-xl overflow-hidden transition transform hover:-translate-y-1 hover:shadow-2xl">
+            <div
+              key={blog.id}
+              className="bg-white/50 bg-opacity-90 backdrop-blur shadow-lg rounded-xl overflow-hidden transition transform hover:-translate-y-1 hover:shadow-2xl"
+            >
               {blog.imagen?.formats?.medium?.url && (
                 <img
                   src={`http://localhost:1337${blog.imagen.formats.medium.url}`}
                   alt={blog.nombre}
-                  className="w-full object-cover"
+                  className="w-full object-cover cursor-pointer"
+                  onClick={() => setImagenSeleccionada(`http://localhost:1337${blog.imagen.url}`)}
                 />
               )}
               <div className="p-5">
@@ -62,6 +67,34 @@ export default function Blog() {
           ))}
         </div>
       </div>
+
+      {/* Modal */}
+      {imagenSeleccionada && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
+          onClick={() => setImagenSeleccionada(null)}
+        >
+          <div
+            className="max-w-4xl max-h-[90vh] p-4 bg-white rounded-lg relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="absolute top-2 right-2 text-black bg-gray-200 hover:bg-gray-300 rounded px-2 py-1"
+              onClick={() => setImagenSeleccionada(null)}
+            >
+              Cerrar
+            </button>
+            <img
+              src={imagenSeleccionada}
+              alt="Vista ampliada"
+              className="w-full h-auto max-h-[80vh] object-contain rounded"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
+
+
