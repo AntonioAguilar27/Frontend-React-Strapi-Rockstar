@@ -120,7 +120,7 @@ const DetalleVideojuego: React.FC = () => {
           <ul className="list-disc list-inside space-y-1">
             {videojuego.plataformas.map((plataforma) => (
               <li key={plataforma.id}>
-                {plataforma.nombre} — Lanzamiento: {new Date(plataforma.fecha_lanzamiento).toLocaleDateString()}
+                {plataforma.nombre} {/* — Lanzamiento: {new Date(plataforma.fecha_lanzamiento).toLocaleDateString()}  */}
               </li>
             ))}
           </ul>
