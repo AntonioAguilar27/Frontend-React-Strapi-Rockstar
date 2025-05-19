@@ -3,11 +3,12 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Videojuego } from '../types/index';
 
-const API_URL = 'http://localhost:1337';
+const API_URL = process.env.REACT_APP_API_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const fetchVideojuegoPorSlug = async (slug: string): Promise<Videojuego | null> => {
   try {
-    const res = await axios.get(`${API_URL}/api/videojuegos`, {
+    const res = await axios.get(`${BASE_URL}/api/videojuegos`, {
       params: {
         populate: '*',
         filters: { slug: slug },
@@ -26,7 +27,7 @@ const fetchVideojuegoPorSlug = async (slug: string): Promise<Videojuego | null> 
       peso_gb: v.peso_gb,
       fecha_salida: v.fecha_salida,
       sinopsis: v.sinopsis,
-      cover: v.cover ? { url: API_URL + v.cover.url } : null,
+      cover: v.cover ? { url: BASE_URL + v.cover.url } : null,
       plataformas: v.plataformas.map((p: any) => ({
         id: p.id,
         nombre: p.nombre,

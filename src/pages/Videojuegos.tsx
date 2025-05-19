@@ -2,17 +2,16 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import type { Plataforma, Videojuego } from '../types';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-
-const API_URL = 'http://localhost:1337/api';
+const API_URL = process.env.REACT_APP_API_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function Videojuegos() {
   const [videojuegos, setVideojuegos] = useState<Videojuego[]>([]);
   const [plataformas, setPlataformas] = useState<Plataforma[]>([]);
   const [filtroPlataforma, setFiltroPlataforma] = useState<number | null>(null);
 
-  // Estado para modal
   const [videojuegoSeleccionado, setVideojuegoSeleccionado] = useState<Videojuego | null>(null);
   const [modalAbierto, setModalAbierto] = useState(false);
 
@@ -51,7 +50,6 @@ export default function Videojuegos() {
       );
   }, [filtroPlataforma]);
 
-  // Funciones para abrir/cerrar modal
   const abrirModal = (game: Videojuego) => {
     setVideojuegoSeleccionado(game);
     setModalAbierto(true);
@@ -93,7 +91,7 @@ export default function Videojuegos() {
             >
               {game.cover?.url ? (
                 <img
-                  src={`http://localhost:1337${game.cover.url}`}
+                  src={`${BASE_URL}${game.cover.url}`}
                   alt={game.nombre}
                   className="w-full h-48 object-contain mt-4"
                 />
@@ -123,15 +121,14 @@ export default function Videojuegos() {
         </div>
       </div>
 
-      {/* Modal */}
       {modalAbierto && videojuegoSeleccionado && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-          onClick={cerrarModal} // cerrar al hacer click fuera del modal
+          onClick={cerrarModal}
         >
           <div
             className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative max-h-[90vh] overflow-y-auto"
-            onClick={e => e.stopPropagation()} // evitar cierre al click dentro del modal
+            onClick={e => e.stopPropagation()}
           >
             <button
               className="absolute top-3 right-3 text-gray-700 hover:text-gray-900 text-2xl font-bold"
@@ -145,7 +142,7 @@ export default function Videojuegos() {
 
             {videojuegoSeleccionado.cover?.url && (
               <img
-                src={`http://localhost:1337${videojuegoSeleccionado.cover.url}`}
+                src={`${BASE_URL}${videojuegoSeleccionado.cover.url}`}
                 alt={videojuegoSeleccionado.nombre}
                 className="w-full h-64 object-contain mb-4"
               />

@@ -5,7 +5,7 @@ export default function Landing() {
     <main>
       <Banner/>
       <section>
-      
+  
       </section>
     </main>
   );

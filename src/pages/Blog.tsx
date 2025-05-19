@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Blog as BlogType, Categoria } from '../types';
 
-const API_URL = 'http://localhost:1337/api';
+
+const API_URL = process.env.REACT_APP_API_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default function Blog() {
   const [blogs, setBlogs] = useState<BlogType[]>([]);
@@ -52,10 +54,10 @@ export default function Blog() {
             >
               {blog.imagen?.formats?.medium?.url && (
                 <img
-                  src={`http://localhost:1337${blog.imagen.formats.medium.url}`}
+                  src={`${BASE_URL}${blog.imagen.formats.medium.url}`}
                   alt={blog.nombre}
                   className="w-full object-cover cursor-pointer"
-                  onClick={() => setImagenSeleccionada(`http://localhost:1337${blog.imagen.url}`)}
+                  onClick={() => setImagenSeleccionada(`${BASE_URL}${blog.imagen.url}`)}
                 />
               )}
               <div className="p-5">
