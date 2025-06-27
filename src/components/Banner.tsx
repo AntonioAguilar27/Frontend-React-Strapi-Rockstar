@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 const images = [
-  'http://localhost:1337/uploads/Jason_and_Lucia_01_ultrawide_be221034df.jpg',
-  'http://localhost:1337/uploads/Jason_and_Lucia_02_ultrawide_956d0dceb6.jpg',
-  'http://localhost:1337/uploads/Jason_and_Lucia_Motel_ultrawide_358e02e36a.jpg',
+  "http://localhost:1337/uploads/Jason_and_Lucia_01_ultrawide_be221034df.jpg",
+  "http://localhost:1337/uploads/Jason_and_Lucia_02_ultrawide_956d0dceb6.jpg",
+  "http://localhost:1337/uploads/Jason_and_Lucia_Motel_ultrawide_358e02e36a.jpg",
 ];
 
-const targetDate = new Date('2026-05-26T00:00:00');
+const targetDate = new Date("2026-05-26T00:00:00");
 
 export default function Banner() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -47,7 +47,7 @@ export default function Banner() {
   }, []);
 
   return (
-    <section className="relative h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] w-full overflow-hidden ">
+    <section className="relative h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] w-full overflow-hidden">
       {/* Imagenes en capas */}
       {images.map((img, index) => (
         <img
@@ -55,22 +55,27 @@ export default function Banner() {
           src={img}
           alt={`Slide ${index}`}
           className={`absolute inset-0 w-full h-full object-fill transition-opacity duration-1000 ${
-            index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
+            index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
           }`}
         />
       ))}
 
       {/* Capa de fondo oscura y contenido */}
       <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center text-white px-4 text-center z-20">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-md">Tiempo restante</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-md">
+          Tiempo restante
+        </h1>
 
         <div className="bg-white bg-opacity-10 backdrop-blur-md px-6 py-4 rounded-lg shadow-lg">
           <div className="text-4xl font-mono font-bold text-white drop-shadow-lg tracking-wide">
-            {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
+            {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m{" "}
+            {timeLeft.seconds}s
           </div>
         </div>
 
-        <div className="text-sm mt-4 text-white drop-shadow-sm">26 de mayo del 2026</div>
+        <div className="text-sm mt-4 text-white drop-shadow-sm">
+          26 de mayo del 2026
+        </div>
       </div>
     </section>
   );

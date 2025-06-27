@@ -8,6 +8,7 @@ import Videojuegos from "./pages/Videojuegos";
 import DetalleVideojuego from "./pages/DetalleVideojuego";
 import DetallePlataforma from "./pages/DetallePlataforma";
 import Navbar2 from "./components/Navbar2";
+import ReservaVideojuego from "./pages/ReservaVideojuego";
 
 import "../src/i18n";
 
@@ -21,6 +22,7 @@ function App() {
         <Route path="/videojuegos" element={<Videojuegos />} />
         <Route path="/videojuego/:slug" element={<DetalleVideojuego />} />
         <Route path="/plataforma/:slug" element={<DetallePlataforma />} />
+        <Route path="/reservar/:slug" element={<ReservaVideojuego />} />
       </Routes>
       <Footer />
     </Router>

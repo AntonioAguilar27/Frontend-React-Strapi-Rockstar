@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { FaFacebookF, FaInstagram, FaWhatsapp } from "react-icons/fa";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import "../styles/Navbar.css";
 import { Link } from "react-router-dom";
@@ -39,7 +39,7 @@ const NavbarComponent: React.FC = () => {
       <div className="container mx-auto px-4 flex items-center justify-between relative">
         {/* LOGO */}
         <div className="flex-shrink-0">
-          <a href="#" className="flex items-center">
+          <a href="/" className="flex items-center">
             <img
               src="rockstargames.svg"
               alt="Rockstar Logo"
@@ -120,7 +120,7 @@ const NavbarComponent: React.FC = () => {
               </a>
             </li>
             <li>
-              <a href="#" target="_blank" rel="noopener noreferrer">
+              <a href="/" target="_blank" rel="noopener noreferrer">
                 <div className="w-10 h-10 border-2 border-[#E5E3D4] rounded-full flex items-center justify-center">
                   <FaXTwitter className="w-5 h-5 invert" />
                 </div>
@@ -171,7 +171,7 @@ const NavbarComponent: React.FC = () => {
             </li>
             <li>
               <Link
-                to="/blogs"
+                to="/videojuegos"
                 className="text-white font-semibold text-m hover:text-white transition-colors duration-200"
               >
                 {t("nav.games")}

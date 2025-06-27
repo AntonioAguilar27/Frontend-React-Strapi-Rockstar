@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Videojuego } from "../types/index";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -28,6 +28,7 @@ const fetchVideojuegoPorSlug = async (
       nombre: v.nombre,
       slug: v.slug,
       precio: v.precio,
+      precio_renta_dia: v.precio_renta_dia, // <-- Nuevo campo
       peso_gb: v.peso_gb,
       fecha_salida: v.fecha_salida,
       sinopsis: v.sinopsis,
@@ -52,6 +53,7 @@ const fetchVideojuegoPorSlug = async (
 };
 
 const DetalleVideojuego: React.FC = () => {
+  const navigate = useNavigate();
   const { slug } = useParams<{ slug: string }>();
   const [videojuego, setVideojuego] = useState<Videojuego | null>(null);
   const [loading, setLoading] = useState(true);
@@ -142,6 +144,9 @@ const DetalleVideojuego: React.FC = () => {
         )}
 
         <div className="space-y-2 mb-6 mt-6">
+          <p className="text-md text-gray-300">
+            Renta por día: ${videojuego.precio_renta_dia} MXN
+          </p>
           <p>
             <span className="font-semibold">💵 Precio:</span> $
             {videojuego.precio}
@@ -203,6 +208,14 @@ const DetalleVideojuego: React.FC = () => {
           </div>
         </div>
       )}
+      <button
+        className="mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
+        onClick={() => {
+          navigate(`/reservar/${videojuego.slug}`);
+        }}
+      >
+        Reservar este juego
+      </button>
     </div>
   );
 };

@@ -37,11 +37,12 @@ export type Videojuego = {
   nombre: string;
   slug: string;
   precio: number;
+  precio_renta_dia: number; // <-- Nuevo campo
   peso_gb: number;
   fecha_salida: string;
   sinopsis: { type: string; children: { type: string; text: string }[] }[];
   cover: { url: string } | null;
-  imagenes: { url: string }[]; // ✅ nuevo campo
+  imagenes: { url: string }[];
   plataformas: {
     id: number;
     nombre: string;
