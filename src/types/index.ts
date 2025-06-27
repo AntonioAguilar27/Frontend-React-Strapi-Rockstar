@@ -21,13 +21,15 @@ export interface Blog {
   categoria: Categoria;
 }
 
-
 // types.ts
 export type Plataforma = {
   id: number;
   nombre: string;
   slug: string;
   fecha_lanzamiento: string;
+  imagen: {
+    url: string;
+  } | null;
 };
 
 export type Videojuego = {
@@ -38,8 +40,12 @@ export type Videojuego = {
   peso_gb: number;
   fecha_salida: string;
   sinopsis: { type: string; children: { type: string; text: string }[] }[];
-  cover: {
-    url: string;
-  } | null;
-  plataformas: Plataforma[];
+  cover: { url: string } | null;
+  imagenes: { url: string }[]; // ✅ nuevo campo
+  plataformas: {
+    id: number;
+    nombre: string;
+    slug: string;
+    fecha_lanzamiento: string;
+  }[];
 };

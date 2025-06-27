@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { Videojuego } from '../types/index';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { Videojuego } from "../types/index";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
-const API_URL = process.env.REACT_APP_API_URL;
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-const fetchVideojuegoPorSlug = async (slug: string): Promise<Videojuego | null> => {
+const fetchVideojuegoPorSlug = async (
+  slug: string
+): Promise<Videojuego | null> => {
   try {
     const res = await axios.get(`${BASE_URL}/api/videojuegos`, {
       params: {
-        populate: '*',
-        filters: { slug: slug },
+        populate: "*",
+        filters: { slug },
       },
     });
 
@@ -28,6 +32,10 @@ const fetchVideojuegoPorSlug = async (slug: string): Promise<Videojuego | null> 
       fecha_salida: v.fecha_salida,
       sinopsis: v.sinopsis,
       cover: v.cover ? { url: BASE_URL + v.cover.url } : null,
+      imagenes:
+        v.imagenes?.map((img: any) => ({
+          url: BASE_URL + img.url,
+        })) || [],
       plataformas: v.plataformas.map((p: any) => ({
         id: p.id,
         nombre: p.nombre,
@@ -38,7 +46,7 @@ const fetchVideojuegoPorSlug = async (slug: string): Promise<Videojuego | null> 
 
     return videojuego;
   } catch (error) {
-    console.error('Error al obtener videojuego:', error);
+    console.error("Error al obtener videojuego:", error);
     return null;
   }
 };
@@ -46,45 +54,62 @@ const fetchVideojuegoPorSlug = async (slug: string): Promise<Videojuego | null> 
 const DetalleVideojuego: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [videojuego, setVideojuego] = useState<Videojuego | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     if (!slug) {
-      setError('No se proporcionó slug');
+      setError("No se proporcionó slug");
       setLoading(false);
       return;
     }
 
-    setLoading(true);
-    setError(null);
-
     fetchVideojuegoPorSlug(slug)
       .then((vj) => {
         if (!vj) {
-          setError('Videojuego no encontrado');
+          setError("Videojuego no encontrado");
         } else {
           setVideojuego(vj);
         }
       })
       .catch(() => {
-        setError('Error al cargar videojuego');
+        setError("Error al cargar videojuego");
       })
       .finally(() => {
         setLoading(false);
       });
   }, [slug]);
 
-  if (loading) return <div className="text-center py-10 text-white">Cargando...</div>;
-  if (error) return <div className="text-center py-10 text-red-500">Error: {error}</div>;
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    responsive: [
+      { breakpoint: 768, settings: { slidesToShow: 2 } },
+      { breakpoint: 480, settings: { slidesToShow: 1 } },
+    ],
+  };
+
+  if (loading)
+    return <div className="text-center py-10 text-white">Cargando...</div>;
+  if (error)
+    return <div className="text-center py-10 text-red-500">Error: {error}</div>;
   if (!videojuego) return null;
 
   return (
     <div
       className="min-h-screen bg-cover bg-center bg-fixed py-10 px-4"
-      style={{ backgroundImage: "url('http://localhost:1337/uploads/background_image_325d67b3eb.png')" }}
+      style={{
+        backgroundImage:
+          "url('http://localhost:1337/uploads/background_image_325d67b3eb.png')",
+      }}
     >
-      <div className="max-w-4xl mx-auto bg-black bg-opacity-30 text-white shadow-2xl rounded-xl overflow-hidden p-6 backdrop-blur">
+      <div className="max-w-4xl mx-auto bg-black bg-opacity-30 text-white shadow-2xl rounded-xl overflow-hidden p-6 backdrop-blur mt-20">
         <h1 className="text-3xl font-bold mb-6">{videojuego.nombre}</h1>
 
         {videojuego.cover && (
@@ -92,15 +117,43 @@ const DetalleVideojuego: React.FC = () => {
             <img
               src={videojuego.cover.url}
               alt={videojuego.nombre}
-              className="rounded-lg shadow-lg max-h-96 object-contain"
+              className="rounded-lg shadow-lg max-h-96 object-contain cursor-pointer"
+              onClick={() => setImagenSeleccionada(videojuego.cover!.url)}
             />
           </div>
         )}
 
-        <div className="space-y-2 mb-6">
-          <p><span className="font-semibold">💵 Precio:</span> ${videojuego.precio}</p>
-          <p><span className="font-semibold">💾 Peso:</span> {videojuego.peso_gb} GB</p>
-          <p><span className="font-semibold">📅 Fecha de salida:</span> {new Date(videojuego.fecha_salida).toLocaleDateString()}</p>
+        {videojuego.imagenes.length > 0 && (
+          <div className="mt-8">
+            <h2 className="text-2xl font-semibold mb-4">🖼️ Galería</h2>
+            <Slider {...sliderSettings}>
+              {videojuego.imagenes.map((img, i) => (
+                <div key={i} className="px-2">
+                  <img
+                    src={img.url}
+                    alt={`Imagen ${i + 1}`}
+                    className="rounded-lg shadow-md object-cover w-full h-48 cursor-pointer"
+                    onClick={() => setImagenSeleccionada(img.url)}
+                  />
+                </div>
+              ))}
+            </Slider>
+          </div>
+        )}
+
+        <div className="space-y-2 mb-6 mt-6">
+          <p>
+            <span className="font-semibold">💵 Precio:</span> $
+            {videojuego.precio}
+          </p>
+          <p>
+            <span className="font-semibold">💾 Peso:</span> {videojuego.peso_gb}{" "}
+            GB
+          </p>
+          <p>
+            <span className="font-semibold">📅 Fecha de salida:</span>{" "}
+            {new Date(videojuego.fecha_salida).toLocaleDateString()}
+          </p>
         </div>
 
         <div className="mb-6">
@@ -120,13 +173,36 @@ const DetalleVideojuego: React.FC = () => {
           <h2 className="text-2xl font-semibold mb-2">🕹️ Plataformas</h2>
           <ul className="list-disc list-inside space-y-1">
             {videojuego.plataformas.map((plataforma) => (
-              <li key={plataforma.id}>
-                {plataforma.nombre} {/* — Lanzamiento: {new Date(plataforma.fecha_lanzamiento).toLocaleDateString()}  */}
-              </li>
+              <li key={plataforma.id}>{plataforma.nombre}</li>
             ))}
           </ul>
         </div>
       </div>
+
+      {/* Modal de imagen en grande */}
+      {imagenSeleccionada && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center"
+          onClick={() => setImagenSeleccionada(null)} // cerrar al hacer clic fuera
+        >
+          <div
+            className="relative max-w-3xl w-full p-4"
+            onClick={(e) => e.stopPropagation()} // evita que el clic dentro del modal lo cierre
+          >
+            <button
+              className="absolute top-2 right-2 text-white text-3xl font-bold"
+              onClick={() => setImagenSeleccionada(null)}
+            >
+              &times;
+            </button>
+            <img
+              src={imagenSeleccionada}
+              alt="Imagen ampliada"
+              className="w-full max-h-[90vh] object-contain rounded-lg shadow-xl"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

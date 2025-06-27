@@ -1,0 +1,112 @@
+.navbar-collapse {
+  display: none;
+}
+
+.navbar-collapse.show {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #e5e3d4;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #0c69b2;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.navbar-nav.mx-auto {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+  margin-top: 3rem;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.nav-link {
+  color: #0c69b2;
+  margin: 5px 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.blue-circle.top {
+  margin-right: 15rem;
+}
+
+.blue-circle.bottom {
+  margin-left: 15rem;
+}
+
+.icon-circle {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #e5e3d4;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+}
+
+.social-icon {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+.language-buttons a {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+@media (min-width: 992px) {
+  .navbar-collapse {
+    display: flex !important;
+    position: static;
+    flex-direction: row;
+    background-color: transparent;
+    padding: 0;
+  }
+
+  .close-btn {
+    display: none;
+  }
+}
+
+/* ../styles/Navbar.css */
+
+/* Clases para la animación de desvanecimiento (fade) del menú móvil */
+.menu-fade-enter {
+  opacity: 0; /* Estado inicial al entrar */
+}
+
+.menu-fade-enter-active {
+  opacity: 1; /* Estado activo al entrar */
+  transition: opacity 300ms ease-in-out; /* Duración y tipo de transición */
+}
+
+.menu-fade-exit {
+  opacity: 1; /* Estado inicial al salir */
+}
+
+.menu-fade-exit-active {
+  opacity: 0; /* Estado activo al salir */
+  transition: opacity 300ms ease-in-out; /* Duración y tipo de transición */
+}
