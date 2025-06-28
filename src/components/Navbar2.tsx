@@ -41,9 +41,9 @@ const NavbarComponent: React.FC = () => {
         <div className="flex-shrink-0">
           <a href="/" className="flex items-center">
             <img
-              src="rockstargames.svg"
+              src="logorockstar.png"
               alt="Rockstar Logo"
-              className="h-[90px]"
+              className="h-[60px]"
             />
           </a>
         </div>

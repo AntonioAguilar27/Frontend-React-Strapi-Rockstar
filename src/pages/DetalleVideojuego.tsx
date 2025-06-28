@@ -1,56 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { Videojuego } from "../types/index";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL;
-
-const fetchVideojuegoPorSlug = async (
-  slug: string
-): Promise<Videojuego | null> => {
-  try {
-    const res = await axios.get(`${BASE_URL}/api/videojuegos`, {
-      params: {
-        populate: "*",
-        filters: { slug },
-      },
-    });
-
-    if (res.data.data.length === 0) return null;
-
-    const v = res.data.data[0];
-
-    const videojuego: Videojuego = {
-      id: v.id,
-      nombre: v.nombre,
-      slug: v.slug,
-      precio: v.precio,
-      precio_renta_dia: v.precio_renta_dia, // <-- Nuevo campo
-      peso_gb: v.peso_gb,
-      fecha_salida: v.fecha_salida,
-      sinopsis: v.sinopsis,
-      cover: v.cover ? { url: BASE_URL + v.cover.url } : null,
-      imagenes:
-        v.imagenes?.map((img: any) => ({
-          url: BASE_URL + img.url,
-        })) || [],
-      plataformas: v.plataformas.map((p: any) => ({
-        id: p.id,
-        nombre: p.nombre,
-        slug: p.slug,
-        fecha_lanzamiento: p.fecha_lanzamiento,
-      })),
-    };
-
-    return videojuego;
-  } catch (error) {
-    console.error("Error al obtener videojuego:", error);
-    return null;
-  }
-};
+import { Videojuego } from "../types";
+import { fetchVideojuegoPorSlug } from "../services/videojuegos";
 
 const DetalleVideojuego: React.FC = () => {
   const navigate = useNavigate();
@@ -184,15 +139,14 @@ const DetalleVideojuego: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal de imagen en grande */}
       {imagenSeleccionada && (
         <div
           className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center"
-          onClick={() => setImagenSeleccionada(null)} // cerrar al hacer clic fuera
+          onClick={() => setImagenSeleccionada(null)}
         >
           <div
             className="relative max-w-3xl w-full p-4"
-            onClick={(e) => e.stopPropagation()} // evita que el clic dentro del modal lo cierre
+            onClick={(e) => e.stopPropagation()}
           >
             <button
               className="absolute top-2 right-2 text-white text-3xl font-bold"

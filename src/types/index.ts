@@ -22,7 +22,7 @@ export interface Blog {
 }
 
 // types.ts
-export type Plataforma = {
+export interface Plataforma {
   id: number;
   nombre: string;
   slug: string;
@@ -30,7 +30,7 @@ export type Plataforma = {
   imagen: {
     url: string;
   } | null;
-};
+}
 
 export type Videojuego = {
   id: number;

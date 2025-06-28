@@ -26,7 +26,9 @@ const ReservaVideojuego: React.FC = () => {
       try {
         const res = await axios.get(`${BASE_URL}/api/videojuegos`, {
           params: {
-            filters: { slug },
+            filters: {
+              slug: { $eq: slug },
+            },
             fields: ["id"],
           },
         });
@@ -45,7 +47,7 @@ const ReservaVideojuego: React.FC = () => {
     fetchVideojuegoId();
   }, [slug]);
 
-  // Verificar disponibilidad cuando el usuario pulse el botón
+  // Verificar disponibilidad
   const verificarDisponibilidad = async () => {
     setMensaje("");
     setDisponible(null);
@@ -88,7 +90,7 @@ const ReservaVideojuego: React.FC = () => {
     }
   };
 
-  // Enviar formulario de reserva
+  // Crear reserva
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMensaje("");
@@ -106,7 +108,7 @@ const ReservaVideojuego: React.FC = () => {
     try {
       await axios.post(`${BASE_URL}/api/reservas`, {
         data: {
-          videojuego: videojuegoId,
+          videojuego: videojuegoId?.toString(), // ✅ Asegura que sea string
           fecha_inicio: fechaInicio,
           fecha_fin: fechaFin,
           nombre_cliente: nombre,
@@ -117,7 +119,6 @@ const ReservaVideojuego: React.FC = () => {
 
       setMensaje("Reserva creada con éxito.");
       setModalAbierto(false);
-      // Limpiar formulario
       setFechaInicio("");
       setFechaFin("");
       setNombre("");
@@ -182,80 +183,75 @@ const ReservaVideojuego: React.FC = () => {
         </button>
 
         {modalAbierto && (
-          <>
+          <div
+            className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+            onClick={() => setModalAbierto(false)}
+          >
             <div
-              className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
-              onClick={() => setModalAbierto(false)}
+              className="bg-gray-800 rounded-lg p-6 max-w-md w-full relative"
+              onClick={(e) => e.stopPropagation()}
             >
-              <div
-                className="bg-gray-800 rounded-lg p-6 max-w-md w-full relative"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <h3 className="text-xl font-bold mb-4 text-center">
-                  Completa tus datos
-                </h3>
+              <h3 className="text-xl font-bold mb-4 text-center">
+                Completa tus datos
+              </h3>
 
-                <form onSubmit={handleSubmit}>
-                  <label className="block mb-1 font-semibold" htmlFor="nombre">
-                    Nombre:
-                  </label>
-                  <input
-                    id="nombre"
-                    type="text"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    required
-                    className="w-full rounded border border-gray-600 p-2 mb-4 bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+              <form onSubmit={handleSubmit}>
+                <label className="block mb-1 font-semibold" htmlFor="nombre">
+                  Nombre:
+                </label>
+                <input
+                  id="nombre"
+                  type="text"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  required
+                  className="w-full rounded border border-gray-600 p-2 mb-4 bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
 
-                  <label className="block mb-1 font-semibold" htmlFor="email">
-                    Email:
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="w-full rounded border border-gray-600 p-2 mb-4 bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                <label className="block mb-1 font-semibold" htmlFor="email">
+                  Email:
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full rounded border border-gray-600 p-2 mb-4 bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
 
-                  <label
-                    className="block mb-1 font-semibold"
-                    htmlFor="telefono"
+                <label className="block mb-1 font-semibold" htmlFor="telefono">
+                  Teléfono:
+                </label>
+                <input
+                  id="telefono"
+                  type="tel"
+                  value={telefono}
+                  onChange={(e) => setTelefono(e.target.value)}
+                  maxLength={10}
+                  minLength={10}
+                  required
+                  className="w-full rounded border border-gray-600 p-2 mb-6 bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+
+                <div className="flex justify-between">
+                  <button
+                    type="submit"
+                    className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-semibold"
                   >
-                    Teléfono:
-                  </label>
-                  <input
-                    id="telefono"
-                    type="tel"
-                    value={telefono}
-                    onChange={(e) => setTelefono(e.target.value)}
-                    maxLength={10}
-                    minLength={10}
-                    required
-                    className="w-full rounded border border-gray-600 p-2 mb-6 bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-
-                  <div className="flex justify-between">
-                    <button
-                      type="submit"
-                      className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-semibold"
-                    >
-                      Confirmar reserva
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setModalAbierto(false)}
-                      className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded font-semibold"
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-                </form>
-              </div>
+                    Confirmar reserva
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setModalAbierto(false)}
+                    className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded font-semibold"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </form>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>
