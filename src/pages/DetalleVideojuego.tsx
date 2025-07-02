@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 import { Videojuego } from "../types";
 import { fetchVideojuegoPorSlug } from "../services/videojuegos";
+import ReservaVideojuego from "../components/ReservaVideojuego";
 
 const DetalleVideojuego: React.FC = () => {
-  const navigate = useNavigate();
   const { slug } = useParams<{ slug: string }>();
   const [videojuego, setVideojuego] = useState<Videojuego | null>(null);
   const [loading, setLoading] = useState(true);
@@ -16,6 +14,12 @@ const DetalleVideojuego: React.FC = () => {
   const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(
     null
   );
+
+  // Control para mostrar reserva (inline)
+  const [mostrarReserva, setMostrarReserva] = useState(false);
+
+  // Control para modal de éxito
+  const [modalExito, setModalExito] = useState(false);
 
   useEffect(() => {
     if (!slug) {
@@ -137,6 +141,27 @@ const DetalleVideojuego: React.FC = () => {
             ))}
           </ul>
         </div>
+
+        {/* Mostrar Reserva inline aquí */}
+        {mostrarReserva && videojuego.id && (
+          <ReservaVideojuego
+            videojuegoId={videojuego.id}
+            onSuccess={() => {
+              setModalExito(true);
+              setMostrarReserva(false);
+            }}
+          />
+        )}
+
+        {/* Botón para mostrar formulario de reserva */}
+        {!mostrarReserva && (
+          <button
+            className="mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
+            onClick={() => setMostrarReserva(true)}
+          >
+            Reservar este juego
+          </button>
+        )}
       </div>
 
       {imagenSeleccionada && (
@@ -162,14 +187,30 @@ const DetalleVideojuego: React.FC = () => {
           </div>
         </div>
       )}
-      <button
-        className="mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
-        onClick={() => {
-          navigate(`/reservar/${videojuego.slug}`);
-        }}
-      >
-        Reservar este juego
-      </button>
+
+      {/* Modal de éxito */}
+      {modalExito && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+          onClick={() => setModalExito(false)}
+        >
+          <div
+            className="bg-green-600 rounded-lg p-6 max-w-sm w-full text-white relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-2xl font-bold mb-4 text-center">¡Éxito!</h3>
+            <p className="mb-6 text-center">Reserva creada con éxito.</p>
+            <div className="flex justify-center">
+              <button
+                onClick={() => setModalExito(false)}
+                className="bg-white text-green-600 px-4 py-2 rounded font-semibold hover:bg-gray-100"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
